@@ -1,0 +1,168 @@
+#################### 日志配置项 ####################
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    #org.springframework.security: INFO
+    #org.springframework.security.oauth2: INFO
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+
+#################### spring配置项 ####################
+spring:
+  application:
+    name: faas-admin
+  profiles:
+    active: prod
+    #active: local
+  # Servlet 配置
+  servlet:
+    # 文件上传相关配置项
+    multipart:
+      #max-file-size: 1GB # 单个文件大小
+      max-file-size: 500MB # 单个文件大小
+      #max-request-size: 1GB # 设置总上传的文件大小
+      max-request-size: 500MB # 设置总上传的文件大小
+  flyway:
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  # Jackson 配置项
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true # 设置 Date 的格式，使用时间戳
+      write-date-timestamps-as-nanoseconds: false # 设置不使用 nanoseconds 的格式。例如说 1611460870.401，而是直接 1611460870401
+      write-durations-as-timestamps: true # 设置 Duration 的格式，使用时间戳
+      fail-on-empty-beans: false # 允许序列化无属性的 Bean
+#################### magic-api配置项 ####################
+magic-api:
+  #配置web页面入口
+  web: /magic/web
+  resource:
+    #配置文件存储位置。当以classpath开头时，为只读模式
+    #location: E:/data/magic-api
+    type: database
+    table-name: ${mybatis-plus.configuration-properties.tablePrefix}api_file_v2
+    prefix: /magic-api
+  auto-import-module: db,log,me # 自动导入的模块
+  sql-column-case: camel        #启用驼峰命名转换
+  #  throw-exception: true         # 执行出错时，异常将抛出处理
+  response-code-config:
+    success: 200                #执行成功的code值
+    invalid: 400                #参数验证未通过的code值
+    exception: 500              #执行出现异常的code值
+  page-config:
+    size: pageSize              # 页大小的请求参数名称
+    page: pageNum               # 页码的请求参数名称
+    default-page: 1             # 未传页码时的默认首页
+    default-size: 10            # 未传页大小时的默认页大小
+  editor-config: classpath:./magic-editor-config.js       #编辑器配置
+#################### MyBatis Plus 的配置项 ####################
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 虽然默认为 true ，但是还是显示去指定下。
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 打印日志
+  configuration-properties:
+    tablePrefix: faas_ # 自定义sql中表名带前缀
+  global-config:
+    db-config:
+      id-type: AUTO # 自增 ID
+      logic-delete-value: 1 # 逻辑已删除值(默认为 1)
+      logic-not-delete-value: 0 # 逻辑未删除值(默认为 0)
+      table-prefix: faas_ #表名前缀
+  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  type-aliases-package: ${faasadmin.base-package}.modules.*.dal.dataobject,${faasadmin.common-service.base-package}.modules.*.dal.dataobject,${faasadmin.saas-service.base-package}.modules.*.dal.dataobject
+debug: false
+#################### 配置文件加密配置 ####################
+jasypt:
+  encryptor:
+    #加解密的密码
+    password: atpingan
+    #jasypt默认更改了算法，如果不指定那么会报错：failed to bind properties under 'spring.datasource.druid.password' to java.lang.String
+    #解决办法：①把版本降到2.x②指定加密方法，如下
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+#################### 系统配置 ####################
+faasadmin:
+  # 产品或项目名称
+  productName: faasadmin
+  # 系统版本号
+  version: 1.0.0
+  base-package: com.faasadmin.faas
+  web:
+    api-prefix: /api
+    controller-package: ${faasadmin.base-package}
+  captcha:
+    timeout: 5m
+    width: 160
+    height: 60
+  codegen:
+    base-package: ${faasadmin.base-package}
+    db-schemas: ${spring.datasource.dynamic.datasource.master.name}
+  error-code: # 错误码相关配置项
+    constants-class-list:
+      - com.faasadmin.framework.common.constant.InfErrorCodeConstants
+      - com.faasadmin.framework.common.constant.SysErrorCodeConstants
+  saas:
+    #多租户表字段
+    lessee-id-column: lessee_id
+    #是否开启多租户
+    enabled-lessee: true
+    #默认租户ID
+    default-lessee-id: 1
+    header-lessee-key: lesseeId
+    #查询需要添加租户过滤的表
+    exist-lessee-tables: ${mybatis-plus.configuration-properties.tablePrefix}sys_dept,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_data,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_type,${mybatis-plus.configuration-properties.tablePrefix}sys_login_log,${mybatis-plus.configuration-properties.tablePrefix}sys_operate_log,${mybatis-plus.configuration-properties.tablePrefix}sys_post,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_channel,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_log,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_template
+  ########################License认证相关#####################
+  #配置文件yml文件中敏感数据加密key
+  #此参数可以配置可以不配置,如果不配置则自动获取系统key,或者使用环境变量方式储存，使用启动命令方式,建议不配置key 让系统自己生成 因为系统是生成key是根居机器码,只有这台机器才能解密
+  #需要加密的参数 DES{} 包裹 或者 SM4{} 包裹
+  encrypt:
+    key: '123456789'
+  #License相关配置
+  license:
+    #主题
+    subject: mszf
+    #公钥别称
+    publicAlias: MszfFaasAdminCert
+    #访问公钥的密码
+    storePass: '@#&^*mszf@faas/admin()++951357'
+    #license位置 如果不是绝对地址 则会找项目资源路径
+    licensePath: license/license.lic
+    #公钥位置 如果不是绝对地址 则会找项目资源路径
+    publicKeysStorePath: license/publicCerts.keystore
+    ########################License认证相关#####################
+
+#################### 微信配置 ####################
+wx:
+  # 公众号配置
+  mp:
+    configs:
+      - appId: xxx
+        secret: xxx
+        token: xxxxxxxxxx
+        aesKey: xxxxxxxxxxxxxxxxxxxx
+  # 小程序配置
+  ma:
+    configs:
+      - appId: xxx
+        secret: xxx
+        # 微信支付商户号，请去微信支付平台申请
+        mchId: 1588227511
+        # 微信支付商户密钥，请去微信支付平台申请
+        mchKey: xxxxxxxxxxxxxxxxxxxxx
+
+#################### 字典转换 ####################
+easy-trans:
+  autotrans:
+    #您的service/dao所在的包 支持通配符比如com.*.**.service.**，他的默认值是com.*.*.service.impl
+    package: com.faasadmin.services.*.service.**;com.faasadmin.admin.modules.*.service.**;com.faasadmin.addons.*.service.**;
+  #启用redis缓存 如果不用redis请设置为false
+  is-enable-redis: false
+  #启用全局翻译(拦截所有responseBody进行自动翻译)，如果对于性能要求很高可关闭此配置
+  is-enable-global: true
+  #启用平铺模式
+  is-enable-tile: true
+
+# oauth2配置
+#jwk:
+#  set:
+#    uri: http://127.0.0.1:9000/authorization/oauth2/jwks

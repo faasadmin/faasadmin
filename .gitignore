@@ -1,0 +1,30 @@
+*.class
+.DS_Store
+application.pid
+
+.idea/*
+ui/dist/**
+ui/node_modules/**
+faas-modules/admin/proguard.cfg
+faas-modules/admin/classes/**
+faas-modules/admin/.flattened-pom.xml
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+hs_err_pid*
+
+# Eclipse
+.classpath
+.project
+target
+.settings
+
+# Idea
+.idea
+*.iml
+
+# git
+*.orig
