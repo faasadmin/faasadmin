@@ -23,18 +23,22 @@
 </p>
 
 [介绍](#介绍) | [软件架构](#软件架构)| [技术选型](#技术选型) | [文档/演示](#文档演示) | [项目截图](#项目截图)
-
+<br>
+<br>
+语雀新用户有7天限制，临时文档地址：https://www.yuque.com/fendo-ubr0z/doc
 # faasadmin 介绍
 
 >本系统得以完成，完全是站在巨人的肩膀上，要多谢前辈们的奉献，由衷的感谢若依，芋道源码，StarBlues，正是由于他们的辛勤付出，我这边才能在短时间内，将该系统做出来，否则的话，全靠我一个人不知要何年何月才能做完。
 
-**本系统由于定位是用于互联网项目开发，提供了一整套解决方法，所以一开始就往商业化这块发展的，没办法，我这也需要发展，希望各位老板多多支持，所采用的一些技术，本文基本上都做了解答，有时间的自行研究，所以对系统部分代码做了加密，请谅解!**
+**本系统由于定位是用于互联网项目开发，提供了一整套解决方法，所以一开始就往商业化这块发展的，没办法，我这也需要发展，希望各位老板多多支持，所采用的一些技术，本文基本上都做了解答，有时间的自行研究，所以对系统部分代码做了加密，请谅解，商业合作请联系客服!**
 
 承接各类APP，小程序，管理系统开发，技术实力这块毋庸置疑，多年开发经验全心为你服务，有这方面需要的联系我们合作。
 
 本人很早就有想法，用JAVA做一个插件式的框架，也研究过很多一些框架以及技术，由于各种各样的原因导致一直没有时间深入，在2021年9月份左右，下定决心，要做一个插件式系统出来，用于互联网项目开发，如各类小程序，公众号，APP后台，然后就调研了下，目前的技术，有现成的一些框架，将他们集成起来就可以了，刚开始想从0开始搞，考虑到只有一个人，这个开发周期不知道要多久，所以就选了一些现成的后台管理系统，在上面扩展，经过几个月的开发，终于完成了第一个版本，核心的几个功能全部实现了，如：系统加密，系统授权，系统安装，应用市场等等，以及将商城做成了一个插件，绝大部分时间都花在商城上去了，如果是单单集成插件功能的话，很容易，我想要的是一整套，所以更重要的是插件市场这块的功能，目前已基本上完成，不敢说100%没问题，还有待测试，插件的安装与卸载可能有缓存，这个问题不大，通过重启系统，都能解决，在该系统上面开发的商城运行良好，目前还没发现啥问题。
 
-插件式开发框架，主程序提供基础功能，通过插件的形式扩展，插件其实就是一个应用，比如商城，CMS，跑腿，外卖，这些应用全部做成插件，按应用收费，然后在主程序里可以在线安装，卸载，更新，备份等等，现在都实现了，取名为faas-admin，faas中文就是"功能即服务"（或称为 FaaS）是一种云计算服务，它允许开发人员以功能的形式来构建、计算、运行和管理这些应用包，无需维护自己的基础架构，对应的就是"功能即插件"。
+插件式开发框架，主程序提供基础功能，通过插件的形式扩展，插件其实就是一个应用，比如商城，CMS，跑腿，外卖，这些应用全部做成插件，按应用收费，然后在主程序里可以在线安装，卸载，更新，备份等等，现在都实现了。
+
+取名为faas-admin，faas中文就是"功能即服务"（或称为 FaaS）是一种云计算服务，它允许开发人员以功能的形式来构建、计算、运行和管理这些应用包，无需维护自己的基础架构，对应的就是"功能即插件"。
 
 目前系统还是第一个版本，还在慢慢发展中，一些核心功能全部实现了，还有其他一些想法有待实现，时间有限，毕竟目前只有我一个人开发，时间精力有限。
 
@@ -1524,6 +1528,53 @@ faasadmin是在若依pro框架基础上扩展的，所以继承了很多功能�
 				</div>
 			</td>
 		</tr>
+        <tr class="ne-tr">
+			<td class="ne-td" data-col="0" >
+				<div class="ne-td-content">
+					<ne-p id="ufcfc57a2" data-lake-id="ufcfc57a2" ne-alignment="left">
+						<a class="ne-link" href="https://gitee.com/link?target=https://qiankun.umijs.org/zh/guide"
+						target="_blank">
+							<ne-text id="u0145e620">
+								qiankun
+							</ne-text>
+						</a>
+						<span class="ne-viewer-b-filler" ne-filler="block">
+							<br>
+						</span>
+					</ne-p>
+				</div>
+				<div class="ne-td-break" contenteditable="false">
+				</div>
+			</td>
+			<td class="ne-td" data-col="1" >
+				<div class="ne-td-content">
+					<ne-p id="ub126575d" data-lake-id="ub126575d" ne-alignment="left">
+						<ne-text id="u9fafc90e" ne-fontsize="16" >
+							微前端
+						</ne-text>
+						<span class="ne-viewer-b-filler" ne-filler="block">
+							<br>
+						</span>
+					</ne-p>
+				</div>
+				<div class="ne-td-break" contenteditable="false">
+				</div>
+			</td>
+			<td class="ne-td" data-col="2" >
+				<div class="ne-td-content">
+					<ne-p id="uab4ceae0" data-lake-id="uab4ceae0" ne-alignment="left">
+						<ne-text id="ucf104975" ne-fontsize="16" >
+							-
+						</ne-text>
+						<span class="ne-viewer-b-filler" ne-filler="block">
+							<br>
+						</span>
+					</ne-p>
+				</div>
+				<div class="ne-td-break" contenteditable="false">
+				</div>
+			</td>
+		</tr>
 	</tbody>
 </table>
 
@@ -1538,6 +1589,9 @@ faasadmin是在若依pro框架基础上扩展的，所以继承了很多功能�
 ![后台启动](img/img_6.png)
 ![启动成功](img/img_7.png)
 ![首页](img/img_8.png)
+
 # 文档/演示
-文档地址：https://www.yuque.com/fendo-ubr0z/kb/nqxrng
+文档地址：https://www.yuque.com/fendo-ubr0z/kb/nqxrng <br>
 在线演示：搭建中
+<br>
+启动器启动示例，群文件里有
