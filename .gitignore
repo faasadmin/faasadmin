@@ -8,7 +8,7 @@ ui/node_modules/**
 faas-modules/admin/proguard.cfg
 faas-modules/admin/classes/**
 faas-modules/admin/.flattened-pom.xml
-
+*.flattened-pom.xml
 # Files #
 *.jar
 *.war
