@@ -67,12 +67,6 @@
         <dependency>
             <groupId>com.faasadmin</groupId>
             <artifactId>faas-plugin</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>logback-classic</artifactId>
-                    <groupId>ch.qos.logback</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.velocity</groupId>

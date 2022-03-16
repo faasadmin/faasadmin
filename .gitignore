@@ -9,10 +9,11 @@ faas-modules/admin/proguard.cfg
 faas-modules/admin/classes/**
 faas-modules/admin/.flattened-pom.xml
 
-# Package Files #
+# Files #
 *.jar
 *.war
 *.ear
+*.zip
 
 hs_err_pid*
 

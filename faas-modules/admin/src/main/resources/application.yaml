@@ -12,8 +12,8 @@ spring:
   application:
     name: faas-admin
   profiles:
-    active: prod
-    #active: local
+    #active: prod
+    active: local
   # Servlet 配置
   servlet:
     # 文件上传相关配置项
