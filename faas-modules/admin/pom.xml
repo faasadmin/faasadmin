@@ -58,6 +58,10 @@
         </dependency>
         <dependency>
             <groupId>com.faasadmin</groupId>
+            <artifactId>applets-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.faasadmin</groupId>
             <artifactId>faas-wx</artifactId>
         </dependency>
         <dependency>
@@ -201,6 +205,12 @@
         <dependency>
             <groupId>de.codecentric</groupId>
             <artifactId>spring-boot-admin-starter-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.faasadmin</groupId>
+            <artifactId>dongle-guide</artifactId>
+            <version>1.0.2</version>
+            <classifier>pg</classifier>
         </dependency>
     </dependencies>
 

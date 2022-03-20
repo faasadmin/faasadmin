@@ -1,4 +1,4 @@
-package com.faasadmin.faas.modules.admin.common.controller;
+package com.faasadmin.faas.modules.admin.common;
 
 import cn.hutool.core.lang.Validator;
 import com.faasadmin.faas.business.core.module.system.service.sms.SysSmsService;

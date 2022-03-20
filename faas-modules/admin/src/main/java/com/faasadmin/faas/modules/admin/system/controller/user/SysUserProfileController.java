@@ -100,12 +100,12 @@ public class SysUserProfileController {
 
     @PutMapping("/upload-avatar")
     @ApiOperation("上传用户个人头像")
-    public CommonResult<Boolean> updateUserAvatar(@RequestParam("avatarFile") MultipartFile file) throws IOException {
+    public CommonResult<String> updateUserAvatar(@RequestParam("avatarFile") MultipartFile file) throws IOException {
         if (file.isEmpty()) {
             throw ServiceExceptionUtil.exception(FILE_IS_EMPTY);
         }
-        sysUserBussService.updateUserAvatar(getLoginUserId(), file.getInputStream());
-        return success(true);
+        String avatar = sysUserBussService.updateUserAvatar(getLoginUserId(), file.getInputStream());
+        return success(avatar);
     }
 
 

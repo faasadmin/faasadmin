@@ -1,0 +1,12 @@
+[db]
+spring.datasource.dynamic.datasource.master.name = faast-test5
+spring.datasource.dynamic.datasource.master.username = root
+spring.datasource.dynamic.datasource.master.password = root
+spring.datasource.dynamic.datasource.master.port = 3386
+spring.datasource.dynamic.datasource.slave.name = faast-test5
+spring.datasource.dynamic.datasource.slave.port = 3386
+spring.datasource.dynamic.datasource.slave.username = root
+spring.datasource.dynamic.datasource.slave.password = root
+server.port = 8089
+mybatis-plus.configuration-properties.tablePrefix = mszf_
+mybatis-plus.global-config.db-config.table-prefix = mszf_

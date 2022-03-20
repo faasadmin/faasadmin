@@ -1,9 +1,8 @@
 {
-  "name": "ruoyi",
-  "version": "3.3.0",
+  "name": "faasadmin",
+  "version": "1.0.5",
   "description": "faasadmin管理系统",
-  "author": "mszf",
-  "license": "MIT",
+  "author": "faasadmin",
   "scripts": {
     "dev": "vue-cli-service serve",
     "build:prod": "vue-cli-service build",

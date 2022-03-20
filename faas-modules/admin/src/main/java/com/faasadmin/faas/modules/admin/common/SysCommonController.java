@@ -1,4 +1,4 @@
-package com.faasadmin.faas.modules.admin.common.controller;
+package com.faasadmin.faas.modules.admin.common;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.HexUtil;

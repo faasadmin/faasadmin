@@ -1,4 +1,4 @@
-package com.faasadmin.faas.modules.admin.common.controller;
+package com.faasadmin.faas.modules.admin.common;
 
 import com.faasadmin.faas.business.core.module.saas.service.lessee.SaasLesseeBussService;
 import com.faasadmin.faas.business.core.module.saas.service.module.SaasModuleBussService;

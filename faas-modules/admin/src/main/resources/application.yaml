@@ -12,8 +12,8 @@ spring:
   application:
     name: faas-admin
   profiles:
-    #active: prod
-    active: local
+    active: prod
+    #active: local
   # Servlet 配置
   servlet:
     # 文件上传相关配置项
@@ -85,7 +85,7 @@ faasadmin:
   # 产品或项目名称
   productName: faasadmin
   # 系统版本号
-  version: 1.0.0
+  version: 1.0.6
   base-package: com.faasadmin.faas
   web:
     api-prefix: /api

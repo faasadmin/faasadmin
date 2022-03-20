@@ -1,4 +1,4 @@
-package com.faasadmin.faas.modules.admin.common.controller.vo;
+package com.faasadmin.faas.modules.admin.common.vo;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
