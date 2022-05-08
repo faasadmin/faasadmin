@@ -1610,3 +1610,4 @@ faasadmin是在若依pro框架基础上扩展的，所以继承了很多功能�
 
 # faasadmin出品
 1.[faasmall商城](https://gitee.com/faasadmin/faasmall)
+2.[faastk淘客系统](https://gitee.com/faasadmin/faastk) --整理中

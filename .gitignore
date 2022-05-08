@@ -31,3 +31,4 @@ target
 *.orig
 /faas-modules/admin/src/test/java/com/mszf/faas/admin/FileTest.java
 /faas-modules/admin/src/main/resources/ui/
+/ui/build/
