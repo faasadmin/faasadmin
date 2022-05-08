@@ -7,7 +7,7 @@
     <parent>
         <artifactId>faas-parent</artifactId>
         <groupId>com.faasadmin</groupId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <relativePath/>
     </parent>
 
@@ -23,7 +23,7 @@
 
     <properties>
         <!--全局版本管理-->
-        <revision>1.0.7</revision>
+        <revision>1.0.8</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
