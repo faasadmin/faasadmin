@@ -13,6 +13,7 @@ spring:
     name: faas-admin
   profiles:
     #active: prod
+    #active: dev
     active: local
   # Servlet 配置
   servlet:
@@ -85,11 +86,20 @@ faasadmin:
   # 产品或项目名称
   productName: faasadmin
   # 系统版本号
-  version: 1.0.6
+  version: 1.0.0
   base-package: com.faasadmin.faas
+#  web:
+#    api-prefix: /api
+#    controller-package: ${faasadmin.base-package}
   web:
-    api-prefix: /api
-    controller-package: ${faasadmin.base-package}
+    admin-api:
+      prefix: /admin-api
+      controller: '**.admin.controller.**.**.**'
+    app-api:
+      prefix: /app-api
+      controller: '**.controller.app.**'
+    admin-ui:
+      url: http://dashboard.yudao.iocoder.cn # Admin 管理后台 UI 的地址
   captcha:
     timeout: 5m
     width: 160
@@ -99,18 +109,57 @@ faasadmin:
     db-schemas: ${spring.datasource.dynamic.datasource.master.name}
   error-code: # 错误码相关配置项
     constants-class-list:
-      - com.faasadmin.framework.common.constant.InfErrorCodeConstants
-      - com.faasadmin.framework.common.constant.SysErrorCodeConstants
-  saas:
-    #多租户表字段
-    lessee-id-column: lessee_id
-    #是否开启多租户
-    enabled-lessee: true
-    #默认租户ID
-    default-lessee-id: 1
-    header-lessee-key: lesseeId
-    #查询需要添加租户过滤的表
-    exist-lessee-tables: ${mybatis-plus.configuration-properties.tablePrefix}sys_dept,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_data,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_type,${mybatis-plus.configuration-properties.tablePrefix}sys_login_log,${mybatis-plus.configuration-properties.tablePrefix}sys_operate_log,${mybatis-plus.configuration-properties.tablePrefix}sys_post,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_channel,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_log,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_template
+      - com.faasadmin.framework.common.constant.ErrorCodeConstants
+  sms-code: # 短信验证码相关的配置项
+    expire-times: 10m
+    send-frequency: 1m
+    send-maximum-quantity-per-day: 10
+    begin-code: 9999 # 这里配置 9999 的原因是，测试方便。
+    end-code: 9999 # 这里配置 9999 的原因是，测试方便。
+#  saas:
+#    #多租户表字段
+#    lessee-id-column: lessee_id
+#    #是否开启多租户
+#    enabled-lessee: true
+#    #默认租户ID
+#    default-lessee-id: 1
+#    header-lessee-key: lesseeId
+#    #查询需要添加租户过滤的表
+#    exist-lessee-tables: ${mybatis-plus.configuration-properties.tablePrefix}sys_dept,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_data,${mybatis-plus.configuration-properties.tablePrefix}sys_dict_type,${mybatis-plus.configuration-properties.tablePrefix}sys_login_log,${mybatis-plus.configuration-properties.tablePrefix}sys_operate_log,${mybatis-plus.configuration-properties.tablePrefix}sys_post,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_channel,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_log,${mybatis-plus.configuration-properties.tablePrefix}sys_sms_template
+  lessee: # 多租户相关配置项
+    enable: true
+    tenant-id-column: lessee_id
+    ignore-urls:
+      - /admin-api/saas/lessee/get-id-by-name # 基于名字获取租户，不许带租户编号
+      - /admin-api/system/captcha/get-image # 获取图片验证码，和租户无关
+      - /admin-api/system/file-upload/*/get/** # 获取图片，和租户无关
+      - /admin-api/system/sms/callback/* # 短信回调接口，无法带上租户编号
+    ignore-tables:
+      - ${mybatis-plus.configuration-properties.tablePrefix}saas_lessee
+      - ${mybatis-plus.configuration-properties.tablePrefix}saas_lessee_module
+      - ${mybatis-plus.configuration-properties.tablePrefix}saas_module
+      - ${mybatis-plus.configuration-properties.tablePrefix}saas_module_menu
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_dict_data
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_dict_type
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_error_code
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_menu
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_sms_channel
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_sms_template
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_sms_log
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_sensitive_word
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_oauth2_client
+      - ${mybatis-plus.configuration-properties.tablePrefix}sys_authorize_url
+      - ${mybatis-plus.configuration-properties.tablePrefix}tool_codegen_column
+      - ${mybatis-plus.configuration-properties.tablePrefix}tool_codegen_table
+      - ${mybatis-plus.configuration-properties.tablePrefix}tool_test_demo
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_config
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_file_config
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_file
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_file_content
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_job
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_job_log
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_job_log
+      - ${mybatis-plus.configuration-properties.tablePrefix}infra_data_source_config
   ########################License认证相关#####################
   #配置文件yml文件中敏感数据加密key
   #此参数可以配置可以不配置,如果不配置则自动获取系统key,或者使用环境变量方式储存，使用启动命令方式,建议不配置key 让系统自己生成 因为系统是生成key是根居机器码,只有这台机器才能解密
@@ -130,7 +179,6 @@ faasadmin:
     #公钥位置 如果不是绝对地址 则会找项目资源路径
     publicKeysStorePath: license/publicCerts.keystore
     ########################License认证相关#####################
-
 #################### 微信配置 ####################
 wx:
   # 公众号配置

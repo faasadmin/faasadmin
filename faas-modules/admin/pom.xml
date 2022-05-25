@@ -83,6 +83,10 @@
         </dependency>
         <dependency>
             <groupId>com.faasadmin</groupId>
+            <artifactId>wx-business</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.faasadmin</groupId>
             <artifactId>core-business</artifactId>
             <exclusions>
                 <exclusion>
@@ -98,6 +102,10 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.faasadmin</groupId>
+            <artifactId>expand-business</artifactId>
         </dependency>
         <dependency>
             <groupId>com.faasadmin</groupId>
@@ -122,7 +130,7 @@
         </dependency>
         <dependency>
             <groupId>com.faasadmin</groupId>
-            <artifactId>faas-lessee</artifactId>
+            <artifactId>faas-saas</artifactId>
         </dependency>
         <dependency>
             <groupId>com.faasadmin</groupId>
@@ -211,6 +219,12 @@
             <artifactId>dongle-guide</artifactId>
             <version>1.0.2</version>
             <classifier>pg</classifier>
+        </dependency>
+        <!--服务SDK-->
+        <dependency>
+            <groupId>com.faasadmin</groupId>
+            <artifactId>faas-services-sdk</artifactId>
+            <version>1.0.9</version>
         </dependency>
     </dependencies>
 
@@ -417,7 +431,7 @@
                         <configuration>
                             <classifier>admin</classifier>
                             <finalName>faasadmin</finalName>
-                            <mainClass>com.faasadmin.faas.modules.admin.AdminStartApplication</mainClass>
+                            <mainClass>com.faasadmin.faas.modules.admin.StartApplication</mainClass>
                         </configuration>
                     </execution>
                 </executions>

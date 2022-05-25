@@ -1,10 +1,10 @@
-import { login, logout, getInfo,namePasswordlogin,smsCodelogin } from '@/api/login'
-import { getToken, setToken, removeToken } from '@/utils/auth'
-import { register } from '@/api/register'
+import {login, logout, getInfo, socialQuickLogin, socialBindLogin, smsLogin} from '@/api/login'
+import {getAccessToken, setToken, removeToken, getRefreshToken} from '@/utils/auth'
+
 
 const user = {
   state: {
-    token: getToken(),
+    id: 0, // 用户编号
     name: '',
     avatar: '',
     roles: [],
@@ -12,8 +12,8 @@ const user = {
   },
 
   mutations: {
-    SET_TOKEN: (state, token) => {
-      state.token = token
+    SET_ID: (state, id) => {
+      state.id = id
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -31,58 +31,6 @@ const user = {
 
   actions: {
     // 登录
-    NamePasswordlogin({ commit }, userInfo) {
-      debugger
-      const userName = userInfo.userName.trim()
-      const password = userInfo.password
-      const code = userInfo.code
-      const uuid = userInfo.uuid
-      return new Promise((resolve, reject) => {
-        namePasswordlogin(userName, password, code, uuid).then(res => {
-        //login(userName, password, code, uuid).then(res => {
-          debugger
-          res = res.data;
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    SmsCodelogin({ commit }, userInfo) {
-      debugger
-      const mobile = userInfo.mobile.trim()
-      const code = userInfo.code.trim()
-      return new Promise((resolve, reject) => {
-        smsCodelogin(mobile, code).then(res => {
-          debugger
-          res = res.data;
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    userRegister({ commit }, userInfo) {
-      debugger
-      const applyModule = userInfo.applyModule;
-      const phonenumber = userInfo.phonenumber.trim();
-      const code = userInfo.code.trim()
-      const userName = userInfo.userName.trim()
-      const loginAccount = userInfo.loginAccount.trim()
-      const password = userInfo.password.trim()
-      return new Promise((resolve, reject) => {
-        register(phonenumber, code, userName, password,applyModule,loginAccount).then(res => {
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 登录
     Login({ commit }, userInfo) {
       const userName = userInfo.userName.trim()
       const password = userInfo.password
@@ -91,8 +39,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userName, password, code, uuid).then(res => {
           res = res.data;
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
+          setToken(res)
           resolve()
         }).catch(error => {
           reject(error)
@@ -105,17 +52,16 @@ const user = {
       const state = userInfo.state
       const type = userInfo.type
       return new Promise((resolve, reject) => {
-        socialLogin(type, code, state).then(res => {
+        socialQuickLogin(type, code, state).then(res => {
           res = res.data;
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
+          // 设置 token
+          setToken(res)
           resolve()
         }).catch(error => {
           reject(error)
         })
       })
     },
-
     // 社交登录
     SocialLogin2({ commit }, userInfo) {
       const code = userInfo.code
@@ -124,10 +70,25 @@ const user = {
       const username = userInfo.username.trim()
       const password = userInfo.password
       return new Promise((resolve, reject) => {
-        socialLogin2(type, code, state, username, password).then(res => {
+        socialBindLogin(type, code, state, username, password).then(res => {
           res = res.data;
-          setToken(res.token)
-          commit('SET_TOKEN', res.token)
+          // 设置 token
+          setToken(res)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 登录
+    SmsLogin({ commit }, userInfo) {
+      const mobile = userInfo.mobile.trim()
+      const mobileCode = userInfo.mobileCode
+      return new Promise((resolve, reject) => {
+        smsLogin(mobile,mobileCode).then(res => {
+          res = res.data;
+          // 设置 token
+          setToken(res)
           resolve()
         }).catch(error => {
           reject(error)
@@ -137,7 +98,7 @@ const user = {
     // 获取用户信息
     GetInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getInfo(state.token).then(res => {
+        getInfo().then(res => {
           // 没有 data 数据，赋予个默认值
           if (!res) {
             res = {
@@ -160,6 +121,7 @@ const user = {
           } else {
             commit('SET_ROLES', ['ROLE_DEFAULT'])
           }
+          commit('SET_ID', user.id)
           commit('SET_NAME', user.userName)
           commit('SET_AVATAR', avatar)
           resolve(res)
@@ -168,12 +130,10 @@ const user = {
         })
       })
     },
-
     // 退出系统
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
           commit('SET_ROLES', [])
           commit('SET_PERMISSIONS', [])
           removeToken()
@@ -181,15 +141,6 @@ const user = {
         }).catch(error => {
           reject(error)
         })
-      })
-    },
-
-    // 前端 登出
-    FedLogOut({ commit }) {
-      return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resolve()
       })
     }
   }

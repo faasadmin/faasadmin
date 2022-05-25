@@ -1,5 +1,22 @@
 <template>
+  <div>
+    <el-upload
+      :data="uploadData"
+      :action="uploadFileUrl"
+      :before-upload="handleBeforeUpload"
+      :on-success="handleUploadSuccess"
+      :on-error="handleUploadError"
+      :on-change="handleFileChange"
+      name="file"
+      :show-file-list="false"
+      :headers="headers"
+      style="display: none"
+      ref="upload"
+      v-if="this.type === 'url'"
+    >
+    </el-upload>
     <div class="editor" ref="editor" :style="styles"></div>
+  </div>
 </template>
 
 <script>
@@ -7,7 +24,8 @@ import Quill from "quill";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
-import { getToken } from "@/utils/auth";
+import { getAccessToken } from "@/utils/auth";
+
 export default {
   name: "Editor",
   props: {
@@ -26,9 +44,27 @@ export default {
       type: Number,
       default: null,
     },
+    /* 只读 */
+    readOnly: {
+      type: Boolean,
+      default: false,
+    },
+    // 上传文件大小限制(MB)
+    fileSize: {
+      type: Number,
+      default: 5,
+    },
+    /* 类型（base64格式、url格式） */
+    type: {
+      type: String,
+      default: "url",
+    }
   },
   data() {
     return {
+      uploadData:{},
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/admin-api/system/file-upload/upload", // 请求地址
+      headers: { Authorization: "Bearer " + getAccessToken() }, // 设置上传的请求头部
       Quill: null,
       currentValue: "",
       options: {
@@ -51,7 +87,7 @@ export default {
           ],
         },
         placeholder: "请输入内容",
-        readOnly: false,
+        readOnly: this.readOnly,
       },
     };
   },
@@ -87,25 +123,25 @@ export default {
     this.Quill = null;
   },
   methods: {
-    uploadToServer(file, callback) {
-      var xhr = new XMLHttpRequest();
-      var formData = new FormData();
-      formData.append('file', file);
-      xhr.open('post', process.env.VUE_APP_BASE_API + '/api/' + "/system/file/record/uploadFile");
-      xhr.setRequestHeader('Authorization',"Bearer " + getToken());
-      xhr.withCredentials = true;
-      xhr.responseType = 'json';
-      xhr.send(formData);
-      xhr.onreadystatechange = () => {
-        debugger
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          callback(xhr.response);
-        }
-      };
+    /** 处理上传的文件发生变化 */
+    handleFileChange(file, fileList) {
+      this.uploadData.path = file.name;
     },
     init() {
       const editor = this.$refs.editor;
       this.Quill = new Quill(editor, this.options);
+      // 如果设置了上传地址则自定义图片上传事件
+      if (this.type === 'url') {
+        let toolbar = this.Quill.getModule("toolbar");
+        toolbar.addHandler("image", (value) => {
+          this.uploadType = "image";
+          if (value) {
+            this.$refs.upload.$children[0].$refs.input.click();
+          } else {
+            this.quill.format("image", false);
+          }
+        });
+      }
       this.Quill.pasteHTML(this.currentValue);
       this.Quill.on("text-change", (delta, oldDelta, source) => {
         const html = this.$refs.editor.children[0].innerHTML;
@@ -124,45 +160,38 @@ export default {
       this.Quill.on("editor-change", (eventName, ...args) => {
         this.$emit("on-editor-change", eventName, ...args);
       });
-
-      //  自定义图片上传
-      var toolbar = this.Quill.getModule('toolbar');
-      debugger
-      toolbar.addHandler('image', () => {
-        debugger
-        var fileInput = toolbar.container.querySelector('input.ql-image[type=file]');
-        if (fileInput == null) {
-          fileInput = document.createElement('input');
-          fileInput.setAttribute('type', 'file');
-          fileInput.setAttribute('accept', 'image/png, image/gif, image/jpeg, image/bmp, image/x-icon');
-          fileInput.classList.add('ql-image');
-          fileInput.addEventListener('change',  () => {
-            debugger
-            if (fileInput.files != null && fileInput.files[0] != null) {
-              this.uploadToServer(fileInput.files[0], (res) => {
-                var range = this.Quill.getSelection();
-                if (range) {
-                  fileInput.value = null;
-                  //  在当前光标位置插入图片
-                  toolbar.quill.insertEmbed(range.index, 'image', res.data.previewUrl);
-                  //  将光标移动到图片后面
-                  toolbar.quill.setSelection(range.index + 1);
-                }
-              });
-            }
-          });
-          toolbar.container.appendChild(fileInput);
+    },
+    // 上传前校检格式和大小
+    handleBeforeUpload(file) {
+      // 校检文件大小
+      if (this.fileSize) {
+        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        if (!isLt) {
+          this.$message.error(`上传文件大小不能超过 ${this.fileSize} MB!`);
+          return false;
         }
-        fileInput.click();
-      });
-
-      //  监听富文本变化，更新父组件数据
-      this.quill.on('text-change', () => {
-        let html = this.$refs.editor.children[0].innerHTML;
-        if (html === '<p><br></p>') html = '';
-        this._content = html;
-        this.$emit('edit', this._content);
-      });
+      }
+      return true;
+    },
+    handleUploadSuccess(res, file) {
+      // 获取富文本组件实例
+      let quill = this.Quill;
+      // 如果上传成功
+      // edit by 芋道源码
+      if (res.code === 200 || res.code === 0) {
+        // 获取光标所在位置
+        let length = quill.getSelection().index;
+        // 插入图片  res.url为服务器返回的图片地址
+        // edit by 芋道源码
+        quill.insertEmbed(length, "image", res.data);
+        // 调整光标到最后
+        quill.setSelection(length + 1);
+      } else {
+        this.$message.error("图片插入失败");
+      }
+    },
+    handleUploadError() {
+      this.$message.error("图片插入失败");
     },
   },
 };
@@ -170,7 +199,7 @@ export default {
 
 <style>
 .editor, .ql-toolbar {
-  white-space: pre-wrap!important;
+  white-space: pre-wrap !important;
   line-height: normal !important;
 }
 .quill-img {

@@ -374,7 +374,7 @@
                         <configuration>
                             <classifier>exec</classifier>
                             <finalName>${project.artifactId}</finalName>
-                            <mainClass>com.faasadmin.faas.modules.admin.AdminStartApplication</mainClass>
+                            <mainClass>com.faasadmin.faas.modules.admin.StartApplication</mainClass>
                             <!--<excludeGroupIds>com.faasadmin</excludeGroupIds>-->
                             <!--                              <excludes>
                                                               <exclude>

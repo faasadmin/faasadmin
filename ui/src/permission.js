@@ -3,7 +3,7 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
-import { getToken } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 
 NProgress.configure({ showSpinner: false })
 
@@ -11,7 +11,7 @@ const whiteList = ['/login', '/auth-redirect', '/bind', '/register']
 
 router.beforeEach((to, from, next) => {
   NProgress.start()
-  if (getToken()) {
+  if (getAccessToken()) {
     /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })

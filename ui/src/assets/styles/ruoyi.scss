@@ -238,3 +238,11 @@
 	position: relative;
 	float: right;
 }
+
+.el-card__header .clearfix span:before {
+ content: '';
+ width: 4px;
+ height: 16px;
+ border-left: 4px solid #409EFF;
+ padding-right: 12px;
+}

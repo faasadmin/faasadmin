@@ -1,0 +1,90 @@
+package com.faasadmin.faas.modules.admin.admin.controller.system.file;
+
+import com.faasadmin.faas.business.core.module.system.service.file.SysFileConfigBussService;
+import com.faasadmin.faas.services.system.convert.file.SysFileConfigConvert;
+import com.faasadmin.faas.services.system.dal.dataobject.file.SysFileConfigDO;
+import com.faasadmin.faas.services.system.vo.fileConfig.SysFileConfigCreateReqVO;
+import com.faasadmin.faas.services.system.vo.fileConfig.SysFileConfigPageReqVO;
+import com.faasadmin.faas.services.system.vo.fileConfig.SysFileConfigRespVO;
+import com.faasadmin.faas.services.system.vo.fileConfig.SysFileConfigUpdateReqVO;
+import com.faasadmin.framework.common.pojo.CommonResult;
+import com.faasadmin.framework.common.pojo.PageResult;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import javax.annotation.Resource;
+import javax.validation.Valid;
+
+import static com.faasadmin.framework.common.pojo.CommonResult.success;
+
+
+@Api(tags = "管理后台 - 文件配置")
+@RestController
+@RequestMapping("/system/file-config")
+@Validated
+public class SysFileConfigController {
+
+    @Resource
+    private SysFileConfigBussService fileConfigService;
+
+    @PostMapping("/create")
+    @ApiOperation("创建文件配置")
+    @PreAuthorize("@ss.hasPermission('system:file-config:create')")
+    public CommonResult<Long> createFileConfig(@Valid @RequestBody SysFileConfigCreateReqVO createReqVO) {
+        return success(fileConfigService.createFileConfig(createReqVO));
+    }
+
+    @PutMapping("/update")
+    @ApiOperation("更新文件配置")
+    @PreAuthorize("@ss.hasPermission('system:file-config:update')")
+    public CommonResult<Boolean> updateFileConfig(@Valid @RequestBody SysFileConfigUpdateReqVO updateReqVO) {
+        fileConfigService.updateFileConfig(updateReqVO);
+        return success(true);
+    }
+
+    @PutMapping("/update-master")
+    @ApiOperation("更新文件配置为 Master")
+    @PreAuthorize("@ss.hasPermission('system:file-config:update')")
+    public CommonResult<Boolean> updateFileConfigMaster(@RequestParam("id") Long id) {
+        fileConfigService.updateFileConfigMaster(id);
+        return success(true);
+    }
+
+    @DeleteMapping("/delete")
+    @ApiOperation("删除文件配置")
+    @ApiImplicitParam(name = "id", value = "编号", required = true, dataTypeClass = Long.class)
+    @PreAuthorize("@ss.hasPermission('system:file-config:delete')")
+    public CommonResult<Boolean> deleteFileConfig(@RequestParam("id") Long id) {
+        fileConfigService.deleteFileConfig(id);
+        return success(true);
+    }
+
+    @GetMapping("/get")
+    @ApiOperation("获得文件配置")
+    @ApiImplicitParam(name = "id", value = "编号", required = true, example = "1024", dataTypeClass = Long.class)
+    @PreAuthorize("@ss.hasPermission('system:file-config:query')")
+    public CommonResult<SysFileConfigRespVO> getFileConfig(@RequestParam("id") Long id) {
+        SysFileConfigDO fileConfig = fileConfigService.getFileConfig(id);
+        return success(SysFileConfigConvert.INSTANCE.convert(fileConfig));
+    }
+
+    @GetMapping("/page")
+    @ApiOperation("获得文件配置分页")
+    @PreAuthorize("@ss.hasPermission('system:file-config:query')")
+    public CommonResult<PageResult<SysFileConfigRespVO>> getFileConfigPage(@Valid SysFileConfigPageReqVO pageVO) {
+        PageResult<SysFileConfigDO> pageResult = fileConfigService.getFileConfigPage(pageVO);
+        return success(SysFileConfigConvert.INSTANCE.convertPage(pageResult));
+    }
+
+    @GetMapping("/test")
+    @ApiOperation("测试文件配置是否正确")
+    @PreAuthorize("@ss.hasPermission('system:file-config:query')")
+    public CommonResult<String> testFileConfig(@RequestParam("id") Long id) throws Exception {
+        String url = fileConfigService.testFileConfig(id);
+        return success(url);
+    }
+}

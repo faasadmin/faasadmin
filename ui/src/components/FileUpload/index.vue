@@ -27,7 +27,7 @@
     <!-- 文件列表 -->
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li :key="file.uid" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
-        <el-link :href="`${baseUrl}${file.url}`" :underline="false" target="_blank">
+        <el-link :href="`${file.url}`" :underline="false" target="_blank">
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { getToken } from "@/utils/auth";
-
+import { getAccessToken } from "@/utils/auth";
 export default {
   name: "FileUpload",
   props: {
@@ -69,11 +68,10 @@ export default {
   },
   data() {
     return {
-      baseUrl: process.env.VUE_APP_BASE_API,
-      uploadFileUrl: process.env.VUE_APP_BASE_API + '/api/' + "/system/file/record/uploadFile", // 上传的图片服务器地址
-      headers: {
-        Authorization: "Bearer " + getToken(),
-      },
+      number: 0,
+      uploadList: [],
+      uploadFileUrl: process.env.VUE_APP_BASE_API + "/admin-api/infra/file/upload", // 请求地址
+      headers: { Authorization: "Bearer " + getAccessToken() }, // 设置上传的请求头部
       fileList: [],
     };
   },
@@ -142,13 +140,19 @@ export default {
     },
     // 上传失败
     handleUploadError(err) {
-      this.$message.error("上传失败, 请重试");
+      this.$modal.msgError("上传图片失败，请重试");
+      this.$modal.closeLoading()
     },
     // 上传成功回调
-    handleUploadSuccess(res, file) {
-      this.$message.success("上传成功");
-      this.fileList.push({ name: res.fileName, url: res.fileName });
-      this.$emit("input", this.listToString(this.fileList));
+    handleUploadSuccess(res) {
+      this.uploadList.push({ name: res.data, url: res.data });
+      if (this.uploadList.length === this.number) {
+        this.fileList = this.fileList.concat(this.uploadList);
+        this.uploadList = [];
+        this.number = 0;
+        this.$emit("input", this.listToString(this.fileList));
+        this.$modal.closeLoading();
+      }
     },
     // 删除文件
     handleDelete(index) {

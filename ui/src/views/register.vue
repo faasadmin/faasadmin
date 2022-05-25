@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="registerForm" :model="registerForm"  :rules="registerRules" class="register-form">
-      <h3 class="title">乐盒后台管理系统 - 用户注册</h3>
+      <h3 class="title">faasadmin后台管理系统 - 用户注册</h3>
       <el-form-item prop="applyModule">
         <el-select v-model="registerForm.applyModule" placeholder="请选择应用模块" clearable style="width: 100%">
           <el-option v-for="dict in applys"
@@ -67,14 +67,13 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2021 luobosheng All Rights Reserved. 客服微信：csmszf</span>
+      <span>Copyright © 2020-2022 faasadmin.com All Rights Reserved. 客服微信：csmszf</span>
     </div>
   </div>
 </template>
 
 <script>
 import {register,getSmsCode,getApplyModules } from "@/api/register";
-import {listSimpleFolders} from "@/api/system/fileRecordFolder";
 const TIME_COUNT = 60;
 export default {
   name: "Register",

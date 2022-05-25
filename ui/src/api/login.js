@@ -1,33 +1,6 @@
 import request from '@/utils/request'
-
-// 用户名与密码登录
-export function namePasswordlogin(userName, password, code, uuid) {
-  const data = {
-    userName,
-    password,
-    code,
-    uuid
-  }
-  return request({
-    url: '/auth/login',
-    method: 'post',
-    data: data
-  })
-}
-
-// 验证码登录方法
-export function smsCodelogin(mobile, code) {
-  debugger
-  const data = {
-    mobile,
-    code,
-  }
-  return request({
-    url: '/sms/login',
-    method: 'post',
-    data: data
-  })
-}
+import {getRefreshToken} from "@/utils/auth";
+import service from "@/utils/request";
 
 // 登录方法
 export function login(userName, password, code, uuid) {
@@ -38,7 +11,7 @@ export function login(userName, password, code, uuid) {
     uuid
   }
   return request({
-    url: '/login',
+    url: '/system/auth/login',
     method: 'post',
     data: data
   })
@@ -47,7 +20,7 @@ export function login(userName, password, code, uuid) {
 // 获取用户详细信息
 export function getInfo() {
   return request({
-    url: '/get-permission-info',
+    url: '/system/auth/get-permission-info',
     method: 'get'
   })
 }
@@ -55,7 +28,7 @@ export function getInfo() {
 // 退出方法
 export function logout() {
   return request({
-    url: '/logout',
+    url: '/system/auth/logout',
     method: 'post'
   })
 }
@@ -64,35 +37,23 @@ export function logout() {
 export function getCodeImg() {
   return request({
     url: '/system/captcha/get-image',
-    method: 'get'
+    method: 'get',
+    timeout: 20000
   })
 }
-
-// 获取短信验证码
-export function getSmsCode(mobile) {
-  const data = {
-    mobile
-  }
-  return request({
-    url: '/system/sms/login/smsCode',
-    method: 'POST',
-    data: data
-  })
-}
-
 
 // 社交授权的跳转
 export function socialAuthRedirect(type, redirectUri) {
   return request({
-    url: '/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri,
+    url: '/system/auth/social-auth-redirect?type=' + type + '&redirectUri=' + redirectUri,
     method: 'get'
   })
 }
 
-// 社交登录，使用 code 授权码
-export function socialLogin(type, code, state) {
+// 社交快捷登录，使用 code 授权码
+export function socialQuickLogin(type, code, state) {
   return request({
-    url: '/social-login',
+    url: '/system/auth/social-quick-login',
     method: 'post',
     data: {
       type,
@@ -102,10 +63,10 @@ export function socialLogin(type, code, state) {
   })
 }
 
-// 社交登录，使用 code 授权码 + + 账号密码
-export function socialLogin2(type, code, state, username, password) {
+// 社交绑定登录，使用 code 授权码 + + 账号密码
+export function socialBindLogin(type, code, state, username, password) {
   return request({
-    url: '/social-login2',
+    url: '/system/auth/social-bind-login',
     method: 'post',
     data: {
       type,
@@ -117,27 +78,34 @@ export function socialLogin2(type, code, state, username, password) {
   })
 }
 
-// 社交绑定，使用 code 授权码
-export function socialBind(type, code, state) {
+// 获取登录验证码
+export function sendSmsCode(mobile, scene) {
   return request({
-    url: '/social-bind',
+    url: '/system/auth/send-sms-code',
     method: 'post',
     data: {
-      type,
-      code,
-      state,
+      mobile,
+      scene
     }
   })
 }
 
-// 取消社交绑定
-export function socialUnbind(type, unionId) {
+// 短信验证码登录
+export function smsLogin(mobile, code) {
   return request({
-    url: '/social-unbind',
-    method: 'delete',
+    url: '/system/auth/sms-login',
+    method: 'post',
     data: {
-      type,
-      unionId
+      mobile,
+      code
     }
+  })
+}
+
+// 刷新访问令牌
+export function refreshToken() {
+  return service({
+    url: '/system/auth/refresh-token?refreshToken=' + getRefreshToken(),
+    method: 'post'
   })
 }

@@ -1,10 +1,64 @@
-﻿/**
- * 通用js方法封装处理
- * Copyright (c) 2019 ruoyi
- */
-import store from '../store' // 获取 Vuex Store 实例，注意是**实例**，而不是 vuex 这个库
+﻿import store from '../store' // 获取 Vuex Store 实例，注意是**实例**，而不是 vuex 这个库
 
 const baseURL = process.env.VUE_APP_BASE_API
+
+/**
+ * 获得租户功能是否开启
+ */
+export function getLesseeEnable() {
+  if (process.env.VUE_APP_LESSEE_ENABLE === "true") {
+    return true;
+  }
+  if (process.env.VUE_APP_LESSEE_ENABLE === "false") {
+    return false;
+  }
+  return process.env.VUE_APP_LESSEE_ENABLE || true;
+}
+
+/**
+ * 获取当前时间
+ * @param timeStr 时分秒 字符串 格式为 xx:xx:xx
+ */
+export function getNowDateTime(timeStr) {
+  let now = new Date();
+  let year = now.getFullYear(); //得到年份
+  let month = (now.getMonth() + 1).toString().padStart(2, "0"); //得到月份
+  let day = now.getDate().toString().padStart(2, "0"); //得到日期
+
+  if (timeStr != null) {
+    return `${year}-${month}-${day} ${timeStr}`;
+  }
+  let hours = now.getHours().toString().padStart(2, "0") // 得到小时;
+  let minutes = now.getMinutes().toString().padStart(2, "0") // 得到分钟;
+  let seconds = now.getSeconds().toString().padStart(2, "0") // 得到秒;
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
+/**
+ * 获得 Vue 应用的基础路径
+ */
+export function getBasePath() {
+  return process.env.VUE_APP_APP_NAME || '/';
+}
+
+/**
+ * 获得 Vue 应用的访问路径
+ *
+ * @param path 路径
+ */
+export function getPath(path) {
+  // 基础路径，必须以 / 结尾
+  let basePath = getBasePath();
+  if (!basePath.endsWith('/')) {
+    return basePath + '/';
+  }
+  // 访问路径，必须不能以 / 开头
+  if (path.startsWith('/')) {
+    path = path.substring(1);
+  }
+  return basePath + path;
+}
+
 
 // 日期格式化
 export function parseTime(time, pattern) {

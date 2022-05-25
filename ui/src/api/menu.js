@@ -5,9 +5,8 @@ export const getRouters = (ascription) => {
   const data = {
     ascription
   }
-  debugger
   return request({
-    url: '/list-menus',
+    url: '/system/auth/list-menus',
     method: 'get',
     params: data
   })

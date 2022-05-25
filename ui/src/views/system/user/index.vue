@@ -242,7 +242,7 @@ import {
   resetUserPwd,
   updateUser
 } from "@/api/system/user";
-import {getToken} from "@/utils/auth";
+import {getAccessToken} from "@/utils/auth";
 import Treeselect from "@riophae/vue-treeselect";
 import "@riophae/vue-treeselect/dist/vue-treeselect.css";
 
@@ -304,7 +304,7 @@ export default {
         // 是否更新已经存在的用户数据
         updateSupport: 0,
         // 设置上传的请求头部
-        headers: { Authorization: "Bearer " + getToken() },
+        headers: { Authorization: "Bearer " + getAccessToken() },
         // 上传的地址
         url: process.env.VUE_APP_BASE_API + '/api/' + "/system/user/import"
       },
